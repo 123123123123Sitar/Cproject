@@ -1,3 +1,53 @@
+#include <fstream>
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+const int CANVAS_WIDTH = 480;
+const int CANVAS_HEIGHT = 360;
+const int CENTER_X = CANVAS_WIDTH / 2;
+const int CENTER_Y = CANVAS_HEIGHT / 2;
+const int LINE_COUNT = 15;
+const int STEP = 10;
+const int EDGE = 150;
+
+struct Point {
+    int x;
+    int y;
+};
+
+struct Color {
+    int r;
+    int g;
+    int b;
+};
+
+int svgX(int snapX) {
+    return CENTER_X + snapX;
+}
+
+int svgY(int snapY) {
+    return CENTER_Y - snapY;
+}
+
+string rgb(Color color) {
+    return "rgb(" + to_string(color.r) + "," + to_string(color.g) + "," + to_string(color.b) + ")";
+}
+
+void drawLine(ofstream& svg, Point start, Point end, Color color) {
+    svg << "  <line x1=\"" << svgX(start.x)
+        << "\" y1=\"" << svgY(start.y)
+        << "\" x2=\"" << svgX(end.x)
+        << "\" y2=\"" << svgY(end.y)
+        << "\" stroke=\"" << rgb(color)
+        << "\" stroke-width=\"1\" stroke-linecap=\"round\" />\n";
+}
+
+void drawFirstQuadrant(ofstream& svg) {
+    Color green = {15, 255, 69};
+
+    for (int i = 1; i <= LINE_COUNT; i++) {
         Point start = {0, EDGE - STEP * i};
         Point end = {STEP * i, 0};
         drawLine(svg, start, end, green);
